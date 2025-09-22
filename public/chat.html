@@ -74,9 +74,18 @@
             }
 
             await loadProject();
-            await loadConversations();
             await loadFiles();
-            startNewConversation();
+
+            // Load conversations and only create new one if none exist
+            await loadConversations();
+            const conversations = await chat.loadConversations(currentProjectId);
+            if (conversations.length > 0) {
+                // Load the most recent conversation
+                await loadConversation(conversations[0].id);
+            } else {
+                // No conversations exist, create the first one
+                await startNewConversation();
+            }
         });
 
         // Load project details
