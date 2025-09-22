@@ -1,0 +1,82 @@
+/* Minimal custom styles */
+
+/* Chat message styles */
+.message {
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 70%;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+}
+
+.assistant-message {
+    background-color: #f1f1f1;
+    color: #333;
+    margin-right: auto;
+}
+
+/* Messages container */
+#messagesContainer {
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    background-color: #fafafa;
+}
+
+/* Smooth scrolling */
+#messagesContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#messagesContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#messagesContainer::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+/* Project cards hover */
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* Loading animation for streaming */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.streaming {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* File upload area */
+.file-chip {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #e9ecef;
+    border-radius: 12px;
+    margin: 2px;
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .message {
+        max-width: 85%;
+    }
+
+    #messagesContainer {
+        height: calc(100vh - 200px);
+    }
+}

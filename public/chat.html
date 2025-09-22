@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Chatbot Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">← Back to Dashboard</a>
+            <span class="navbar-text" id="projectName"></span>
+            <button class="btn btn-outline-light btn-sm" onclick="auth.logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row" style="height: calc(100vh - 56px);">
+            <!-- Sidebar with conversations -->
+            <div class="col-md-3 bg-light p-3 border-end">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>Conversations</h5>
+                    <button class="btn btn-sm btn-primary" onclick="startNewConversation()">New</button>
+                </div>
+                <div id="conversationsList" class="list-group"></div>
+
+                <div class="mt-4">
+                    <h6>Project Files</h6>
+                    <div id="filesList" class="list-group list-group-flush"></div>
+                </div>
+            </div>
+
+            <!-- Chat area -->
+            <div class="col-md-9 d-flex flex-column p-0">
+                <div id="messagesContainer" class="flex-grow-1 p-3 overflow-auto"></div>
+
+                <div class="border-top p-3">
+                    <form id="chatForm" class="d-flex gap-2">
+                        <input type="text" id="messageInput" class="form-control"
+                               placeholder="Type your message..." required>
+                        <button type="submit" class="btn btn-primary" id="sendButton">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+    <script>
+        let currentProjectId = null;
+        let currentProject = null;
+        let currentConversationId = null;
+        let currentMessages = [];
+        let eventSource = null;
+
+        // Check authentication and load project
+        window.addEventListener('load', async () => {
+            if (!(await auth.checkSession())) {
+                window.location.href = '/';
+                return;
+            }
+
+            // Get project ID from URL
+            const params = new URLSearchParams(window.location.search);
+            currentProjectId = params.get('project');
+
+            if (!currentProjectId) {
+                alert('No project selected');
+                window.location.href = '/dashboard';
+                return;
+            }
+
+            await loadProject();
+            await loadConversations();
+            await loadFiles();
+            startNewConversation();
+        });
+
+        // Load project details
+        async function loadProject() {
+            try {
+                currentProject = await projects.getById(currentProjectId);
+                document.getElementById('projectName').textContent = currentProject.name;
+            } catch (error) {
+                console.error('Failed to load project:', error);
+                window.location.href = '/dashboard';
+            }
+        }
+
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const conversations = await chat.loadConversations(currentProjectId);
+                const container = document.getElementById('conversationsList');
+
+                if (conversations.length === 0) {
+                    container.innerHTML = '<p class="text-muted small">No conversations yet</p>';
+                    return;
+                }
+
+                container.innerHTML = conversations.map(conv => `
+                    <button class="list-group-item list-group-item-action ${conv.id === currentConversationId ? 'active' : ''}"
+                            onclick="loadConversation('${conv.id}')">
+                        ${conv.title || 'Untitled'}
+                    </button>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load conversations:', error);
+            }
+        }
+
+        // Load project files
+        async function loadFiles() {
+            try {
+                const projectFiles = await files.list(currentProjectId);
+                const container = document.getElementById('filesList');
+
+                if (projectFiles.length === 0) {
+                    container.innerHTML = '<p class="text-muted small">No files uploaded</p>';
+                    return;
+                }
+
+                container.innerHTML = projectFiles.map(file => `
+                    <div class="list-group-item small">📄 ${file.filename}</div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load files:', error);
+            }
+        }
+
+        // Start new conversation
+        async function startNewConversation() {
+            currentConversationId = await chat.createConversation(currentProjectId);
+            currentMessages = [];
+            renderMessages();
+            await loadConversations();
+        }
+
+        // Load conversation
+        async function loadConversation(conversationId) {
+            currentConversationId = conversationId;
+            currentMessages = await chat.loadMessages(conversationId);
+            renderMessages();
+        }
+
+        // Render messages
+        function renderMessages() {
+            const container = document.getElementById('messagesContainer');
+
+            if (currentMessages.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">No messages yet. Start a conversation!</p>';
+                return;
+            }
+
+            container.innerHTML = currentMessages.map(msg => `
+                <div class="message ${msg.role === 'user' ? 'user-message' : 'assistant-message'} mb-3">
+                    <div class="fw-bold">${msg.role === 'user' ? 'You' : 'Assistant'}</div>
+                    <div>${msg.content}</div>
+                </div>
+            `).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send message
+        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const userMessage = input.value.trim();
+
+            if (!userMessage) return;
+
+            // Disable input while sending
+            input.disabled = true;
+            sendButton.disabled = true;
+
+            // Add user message to UI
+            currentMessages.push({ role: 'user', content: userMessage });
+            renderMessages();
+
+            // Clear input
+            input.value = '';
+
+            // Prepare messages for API
+            const apiMessages = [
+                { role: 'system', content: currentProject.system_prompt || 'You are a helpful assistant.' },
+                ...currentMessages
+            ];
+
+            // Add assistant message placeholder
+            const assistantMessageIndex = currentMessages.length;
+            currentMessages.push({ role: 'assistant', content: '' });
+
+            try {
+                // Save user message
+                await chat.saveMessage(currentConversationId, 'user', userMessage);
+
+                // Start streaming
+                await chat.streamResponse(apiMessages, currentProjectId, (content) => {
+                    currentMessages[assistantMessageIndex].content += content;
+                    renderMessages();
+                });
+
+                // Save assistant message
+                await chat.saveMessage(currentConversationId, 'assistant', currentMessages[assistantMessageIndex].content);
+
+            } catch (error) {
+                console.error('Chat error:', error);
+                currentMessages[assistantMessageIndex].content = 'Sorry, an error occurred. Please try again.';
+                renderMessages();
+            }
+
+            // Re-enable input
+            input.disabled = false;
+            sendButton.disabled = false;
+            input.focus();
+        });
+    </script>
+</body>
+</html>
