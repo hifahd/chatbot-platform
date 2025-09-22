@@ -180,6 +180,22 @@ const chat = {
                 }
             }
         }
+    },
+
+    async updateConversationTitle(conversationId, newTitle) {
+        const { error } = await supabaseClient
+            .from('conversations')
+            .update({ title: newTitle })
+            .eq('id', conversationId);
+        if (error) throw error;
+    },
+
+    async deleteConversation(conversationId) {
+        const { error } = await supabaseClient
+            .from('conversations')
+            .delete()
+            .eq('id', conversationId);
+        if (error) throw error;
     }
 };
 

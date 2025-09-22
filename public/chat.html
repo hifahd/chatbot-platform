@@ -102,10 +102,15 @@
                 }
 
                 container.innerHTML = conversations.map(conv => `
-                    <button class="list-group-item list-group-item-action ${conv.id === currentConversationId ? 'active' : ''}"
-                            onclick="loadConversation('${conv.id}')">
-                        ${conv.title || 'Untitled'}
-                    </button>
+                    <div class="list-group-item list-group-item-action conversation-item ${conv.id === currentConversationId ? 'active' : ''}">
+                        <div class="conversation-content" onclick="loadConversation('${conv.id}')">
+                            <span class="conversation-title">${conv.title || 'Untitled'}</span>
+                        </div>
+                        <div class="conversation-actions">
+                            <button class="btn-edit" onclick="editConversation('${conv.id}', '${conv.title || 'Untitled'}')" title="Rename">✏️</button>
+                            <button class="btn-delete" onclick="deleteConversationConfirm('${conv.id}')" title="Delete">🗑️</button>
+                        </div>
+                    </div>
                 `).join('');
             } catch (error) {
                 console.error('Failed to load conversations:', error);
@@ -221,6 +226,46 @@
             sendButton.disabled = false;
             input.focus();
         });
+
+        // Edit conversation title
+        async function editConversation(conversationId, currentTitle) {
+            const newTitle = prompt('Enter new conversation title:', currentTitle);
+            if (newTitle && newTitle.trim() && newTitle.trim() !== currentTitle) {
+                try {
+                    await chat.updateConversationTitle(conversationId, newTitle.trim());
+                    await loadConversations();
+                } catch (error) {
+                    console.error('Failed to update conversation title:', error);
+                    alert('Failed to update conversation title');
+                }
+            }
+        }
+
+        // Delete conversation with confirmation
+        async function deleteConversationConfirm(conversationId) {
+            if (confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
+                try {
+                    await chat.deleteConversation(conversationId);
+
+                    // If deleted conversation was active, load the first remaining conversation
+                    if (conversationId === currentConversationId) {
+                        await loadConversations();
+                        const conversations = await chat.loadConversations(currentProjectId);
+                        if (conversations.length > 0) {
+                            await loadConversation(conversations[0].id);
+                        } else {
+                            // No conversations left, start a new one
+                            await startNewConversation();
+                        }
+                    } else {
+                        await loadConversations();
+                    }
+                } catch (error) {
+                    console.error('Failed to delete conversation:', error);
+                    alert('Failed to delete conversation');
+                }
+            }
+        }
     </script>
 </body>
 </html>

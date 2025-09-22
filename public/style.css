@@ -286,6 +286,52 @@ body:not(.landing-page) {
     font-size: 0.875rem;
 }
 
+/* Conversation actions */
+.conversation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+}
+
+.conversation-content {
+    flex: 1;
+    cursor: pointer;
+}
+
+.conversation-title {
+    font-size: 0.9rem;
+}
+
+.conversation-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    gap: 4px;
+}
+
+.conversation-item:hover .conversation-actions {
+    opacity: 1;
+}
+
+.btn-edit, .btn-delete {
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    padding: 2px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+.btn-delete:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .message {
@@ -294,5 +340,9 @@ body:not(.landing-page) {
 
     #messagesContainer {
         height: calc(100vh - 200px);
+    }
+
+    .conversation-actions {
+        opacity: 1; /* Always show on mobile */
     }
 }
