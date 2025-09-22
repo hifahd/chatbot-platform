@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/dashboard">Chatbot Platform</a>
+            <a class="navbar-brand" href="/dashboard">Fahd's Chatbot Platform</a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text me-3" id="userEmail"></span>
                 <button class="btn btn-outline-light btn-sm" onclick="auth.logout()">Logout</button>
@@ -19,11 +19,13 @@
     </nav>
 
     <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>My Projects</h2>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
-                Create New Project
-            </button>
+        <div class="dashboard-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="dashboard-title">My Projects</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                    Create New Project
+                </button>
+            </div>
         </div>
 
         <div id="projectsList" class="row"></div>
@@ -118,7 +120,15 @@
             const container = document.getElementById('projectsList');
 
             if (currentProjects.length === 0) {
-                container.innerHTML = '<div class="col-12"><p class="text-center">No projects yet. Create your first project!</p></div>';
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <h3 class="empty-state-title">Welcome to Your Dashboard</h3>
+                            <p class="empty-state-text">Create your first AI project to get started with intelligent conversations</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
