@@ -144,6 +144,7 @@
             currentConversationId = conversationId;
             currentMessages = await chat.loadMessages(conversationId);
             renderMessages();
+            await loadConversations(); // Re-render sidebar to update active state
         }
 
         // Render messages

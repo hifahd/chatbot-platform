@@ -156,17 +156,58 @@ body:not(.landing-page) {
     margin-bottom: 0;
 }
 
-/* Project cards subtle enhancement */
+/* Project cards enhancement */
 .card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: none;
     border-radius: 12px;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    color: #2d3748;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.card-text {
+    color: #718096 !important;
+    line-height: 1.5;
+}
+
+.card .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.card .btn-secondary {
+    background-color: #e2e8f0;
+    border: none;
+    color: #4a5568;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.card .btn-danger {
+    background-color: #feb2b2;
+    border: none;
+    color: #c53030;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
 }
 
 /* Chat message styles */
