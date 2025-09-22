@@ -2,6 +2,8 @@
 
 A chatbot platform with authentication, project management, and chat capabilities using Supabase and OpenAI API.
 
+**Live Demo:** https://chatbot-platform-9sh8.onrender.com/
+
 ## Features
 
 - User authentication with email/password registration and login
@@ -21,7 +23,7 @@ A chatbot platform with authentication, project management, and chat capabilitie
 
 ## Assignment Requirements
 
-This chatbot platform implements the requirements for the Yellow.ai Software Engineer Intern assignment:
+This chatbot platform implements the requirements for the Software Engineer Intern assignment:
 
 - Authentication System: JWT/OAuth2 with email/password
 - Project/Agent Management: Create and manage multiple projects with custom prompts
@@ -41,7 +43,7 @@ This chatbot platform implements the requirements for the Yellow.ai Software Eng
 ### 1. Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/hifahd/chatbot-platform.git
 cd chatbot-platform
 ```
 
@@ -187,16 +189,7 @@ SUPABASE_SERVICE_KEY=your_supabase_service_key
 PORT=3000
 ```
 
-### 5. Update Frontend Configuration
-
-Edit `public/app.js` and replace the placeholders:
-
-```javascript
-const SUPABASE_URL = 'your_supabase_project_url';
-const SUPABASE_ANON_KEY = 'your_supabase_anon_key';
-```
-
-### 6. Run Locally
+### 5. Run Locally
 
 ```bash
 npm start
@@ -213,7 +206,6 @@ Visit `http://localhost:3000`
    - `OPENAI_API_KEY`
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_KEY`
-   - `PORT` (usually auto-set by Render)
 5. Deploy
 
 ## Usage
@@ -239,7 +231,7 @@ chatbot-platform/
 ├── .env                   # Environment variables
 ├── .gitignore            # Git ignore file
 ├── README.md             # This file
-└── PLAN.md               # Architecture documentation
+└── ARCHITECTURE.md       # Architecture documentation
 ```
 
 ## Security Notes
