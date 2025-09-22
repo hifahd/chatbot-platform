@@ -1,40 +1,39 @@
 # Chatbot Platform
 
-A modern chatbot platform with authentication, project management, and AI-powered chat capabilities using Supabase and OpenAI's latest GPT-5 model via the Responses API.
+A chatbot platform with authentication, project management, and chat capabilities using Supabase and OpenAI API.
 
 ## Features
 
-- **User Authentication**: Secure email/password registration and login
-- **Project Management**: Create and manage multiple AI agents/projects
-- **Custom System Prompts**: Define unique personality and behavior for each project
-- **Real-time Chat**: Streaming responses from GPT-5 via OpenAI Responses API
-- **File Upload**: Upload files using OpenAI Files API for context-aware conversations
-- **Conversation History**: Persistent chat history with multiple conversation support
-- **Security**: JWT authentication, Row-Level Security, and secure API key handling
+- User authentication with email/password registration and login
+- Create and manage multiple AI projects with custom system prompts
+- Chat interface with streaming responses from OpenAI API
+- File upload using OpenAI Files API for context-aware conversations
+- Conversation history with multiple conversation support
+- JWT authentication, Row-Level Security, and API key handling
 
 ## Tech Stack
 
-- **Backend**: Supabase (Auth + Database) + Node.js/Express proxy server
-- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5
-- **AI**: OpenAI GPT-5-mini via Responses API
-- **File Handling**: OpenAI Files API
-- **Deployment**: Render (or any Node.js hosting platform)
+- Backend: Supabase (Auth + Database) + Node.js/Express proxy server
+- Frontend: HTML, CSS, JavaScript, Bootstrap 5
+- AI: OpenAI API
+- File Handling: OpenAI Files API
+- Deployment: Render (or any Node.js hosting platform)
 
 ## Assignment Requirements
 
-This chatbot platform implements all requirements for the Yellow.ai Software Engineer Intern assignment:
+This chatbot platform implements the requirements for the Yellow.ai Software Engineer Intern assignment:
 
-✅ **Authentication System**: JWT/OAuth2 with email/password
-✅ **Project/Agent Management**: Create and manage multiple projects with custom prompts
-✅ **Chat Interface**: Real-time interaction using OpenAI Responses API
-✅ **File Upload**: Files API integration for context-aware conversations
-✅ **Scalability**: Multi-user support with proper data isolation
-✅ **Security**: Row-level security and secure API handling
+- Authentication System: JWT/OAuth2 with email/password
+- Project/Agent Management: Create and manage multiple projects with custom prompts
+- Chat Interface: Interaction using OpenAI API
+- File Upload: Files API integration for context-aware conversations
+- Scalability: Multi-user support with data isolation
+- Security: Row-level security and API handling
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- Supabase account with organization verification (for GPT-5 access)
+- Supabase account
 - OpenAI API key with credits
 
 ## Setup Instructions
